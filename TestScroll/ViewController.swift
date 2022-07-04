@@ -19,15 +19,28 @@ class ViewController: UIViewController {
   
   
   @IBAction func didPress(_ sender: Any) {
-    array.append(Cell())
-    collectionView.reloadData()
-    collectionView.scrollToItem(at: IndexPath(row: array.count-1, section: 0), at: .right, animated: true)
+    add()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
   }
-
+  
+  func add() {
+    DispatchQueue.main.async {
+      self.array.append(Cell())
+      self.collectionView.reloadData()
+      self.collectionView.scrollToItem(at: IndexPath(row: self.array.count-1, section: 0), at: .right, animated: true)
+    }
+  }
+  
+  func remove(at index: Int) {
+    DispatchQueue.main.async {
+      self.array.remove(at: index)
+      self.collectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+    }
+    
+  }
 
 }
 
@@ -44,8 +57,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    array.remove(at: indexPath.row)
-    collectionView.deleteItems(at: [indexPath])
+    remove(at: indexPath.row)
   }
   
 }
+
