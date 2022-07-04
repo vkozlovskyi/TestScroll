@@ -41,6 +41,32 @@ class ViewController: UIViewController {
     }
     
   }
+  
+  var y: CGFloat = .zero
+  
+  @objc func pan(_ recongizer: UIPanGestureRecognizer) {
+    let location = recongizer.location(in: collectionView)
+    let view = recongizer.view
+    if recongizer.state == .began {
+      y = view!.center.y
+    }
+    if recongizer.state == .changed {
+      view?.center = CGPoint(x: view!.center.x, y: location.y)
+    }
+    if recongizer.state == .ended {
+      let offset = abs(location.y - y)
+      if offset > 50 {
+        if let indexPath = collectionView.indexPath(for: view as! UICollectionViewCell) {
+          remove(at: indexPath.row)
+        }
+      } else {
+        UIView.animate(withDuration: 0.4) {
+          view?.center = CGPoint(x: view!.center.x, y: self.y)
+        }
+        
+      }
+    }
+  }
 
 }
 
@@ -48,6 +74,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ScrollCell", for: indexPath)
+    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
+    cell.addGestureRecognizer(panGesture)
     cell.backgroundColor = .gray
     return cell
   }
