@@ -43,5 +43,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     array.count
   }
   
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    array.remove(at: indexPath.row)
+    collectionView.deleteItems(at: [indexPath])
+  }
   
 }
